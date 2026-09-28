@@ -1,3 +1,5 @@
+import { getRequestWebStream } from 'h3'
+
 export default defineEventHandler(async event => {
   await requireAdmin(event)
   if (getHeader(event, 'content-type') !== 'image/webp') {
@@ -6,11 +8,22 @@ export default defineEventHandler(async event => {
   const limit = 5 * 1024 * 1024
   const chunks: Buffer[] = []
   let size = 0
-  for await (const chunk of event.node.req) {
-    const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
-    size += bytes.length
-    if (size > limit) throw createError({ statusCode: 413, statusMessage: 'Image exceeds 5MB' })
-    chunks.push(bytes)
+  const reader = getRequestWebStream(event)?.getReader()
+  if (!reader) throw createError({ statusCode: 400, statusMessage: 'Missing image body' })
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      const bytes = Buffer.from(value)
+      size += bytes.length
+      if (size > limit) {
+        await reader.cancel()
+        throw createError({ statusCode: 413, statusMessage: 'Image exceeds 5MB' })
+      }
+      chunks.push(bytes)
+    }
+  } finally {
+    reader.releaseLock()
   }
   const body = Buffer.concat(chunks)
   if (!body || body.length < 20 || body.toString('ascii', 0, 4) !== 'RIFF'

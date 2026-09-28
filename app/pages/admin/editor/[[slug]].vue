@@ -2,9 +2,10 @@
 import type { EditorCustomHandlers, EditorToolbarItem } from '@nuxt/ui'
 import type { Editor } from '@tiptap/vue-3'
 import { ImageUpload } from '~/extensions/image-upload'
+import Youtube from '@tiptap/extension-youtube'
 import TextAlign from '@tiptap/extension-text-align'
 
-const extensions = [ImageUpload, TextAlign.configure({ types: ['heading', 'paragraph'] })]
+const extensions = [Youtube.configure({ nocookie: true, addPasteHandler: true }), ImageUpload, TextAlign.configure({ types: ['heading', 'paragraph'] })]
 
 const customHandlers = {
   imageUpload: {

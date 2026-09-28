@@ -29,5 +29,11 @@
       "bucket_name": "blog-images",
       "remote": false
     }
+  ],
+  "routes": [
+    {
+      "pattern": "blog.hyuneon.org",
+      "custom_domain": true
+    }
   ]
 }

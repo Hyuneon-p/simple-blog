@@ -40,5 +40,6 @@
     "typescript": "^5.9.3",
     "vue-tsc": "^3.3.11",
     "wrangler": "^4.141.0"
-  }
+  },
+  "packageManager": "pnpm@11.22.0"
 }

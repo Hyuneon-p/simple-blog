@@ -4,14 +4,38 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "pnpm db:migrate:local && nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview": "wrangler dev --local",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "start": "wrangler dev --local",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "cf:types": "wrangler types",
+    "db:export:sqlite": "node scripts/export-sqlite.mjs"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.11.2",
+    "@tiptap/extension-text-align": "^3.31.3",
+    "jose": "^6.2.12",
+    "markdown-it": "^15.0.2",
     "nuxt": "^4.5.2",
+    "sanitize-html": "^2.17.7",
+    "slugify": "^1.6.9",
+    "tailwindcss": "^4.3.3",
     "vue": "^3.5.43",
     "vue-router": "^5.3.1"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260927.1",
+    "@types/markdown-it": "^14.2.0",
+    "@types/node": "^26.6.3",
+    "@types/sanitize-html": "^2.16.1",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.3.11",
+    "wrangler": "^4.141.0"
   }
 }

@@ -1,2 +1,5 @@
 allowBuilds:
+  better-sqlite3: true
   esbuild: false
+  vue-demi: true
+  workerd: true

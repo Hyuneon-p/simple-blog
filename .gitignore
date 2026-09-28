@@ -22,3 +22,14 @@ logs
 .env
 .env.*
 !.env.example
+
+# SQLite runtime data
+data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+.wrangler/
+.dev.vars
+.dev.vars.*
+worker-configuration.d.ts

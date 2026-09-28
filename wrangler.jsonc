@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "simple-blog",
+  "name": "blog",
   "main": ".output/server/index.mjs",
   "compatibility_date": "2026-09-28",
   "compatibility_flags": [
@@ -17,7 +17,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "simple-blog-db",
+      "database_name": "blog-db",
       "database_id": "00000000-0000-0000-0000-000000000000",
       "migrations_dir": "migrations",
       "remote": false
@@ -26,7 +26,7 @@
   "r2_buckets": [
     {
       "binding": "IMAGES",
-      "bucket_name": "simple-blog-images",
+      "bucket_name": "blog-images",
       "remote": false
     }
   ]

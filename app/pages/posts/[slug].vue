@@ -2,7 +2,7 @@
 const route = useRoute()
 const { data: post, error } = await useFetch(() => `/api/posts/${encodeURIComponent(String(route.params.slug))}`)
 if (error.value) throw createError({ statusCode: error.value.statusCode || 500, statusMessage: error.value.statusCode === 404 ? 'Post not found' : 'Failed to load post' })
-useSeoMeta({ title: () => post.value?.title || 'Simple Blog' })
+useSeoMeta({ title: () => post.value?.title || undefined })
 </script>
 
 <template>

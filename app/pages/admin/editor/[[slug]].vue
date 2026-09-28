@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import type { EditorToolbarItem } from '@nuxt/ui'
+import type { EditorCustomHandlers, EditorToolbarItem } from '@nuxt/ui'
+import type { Editor } from '@tiptap/vue-3'
+import { ImageUpload } from '~/extensions/image-upload'
 import TextAlign from '@tiptap/extension-text-align'
 
-const extensions = [TextAlign.configure({ types: ['heading', 'paragraph'] })]
+const extensions = [ImageUpload, TextAlign.configure({ types: ['heading', 'paragraph'] })]
 
-const toolbarItems: EditorToolbarItem[][] = [
+const customHandlers = {
+  imageUpload: {
+    canExecute: (editor: Editor) => editor.can().insertContent({ type: 'imageUpload' }),
+    execute: (editor: Editor) => editor.chain().focus().insertContent({ type: 'imageUpload' }),
+    isActive: (editor: Editor) => editor.isActive('imageUpload'),
+  },
+} satisfies EditorCustomHandlers
+
+const toolbarItems: EditorToolbarItem<typeof customHandlers>[][] = [
+  [{ kind: 'imageUpload', icon: 'i-lucide-image-plus', tooltip: { text: '사진 업로드' } }],
   [{ kind: 'undo', icon: 'i-lucide-undo-2' }, 
   { kind: 'redo', icon: 'i-lucide-redo-2' }],
 
@@ -53,6 +64,10 @@ onMounted(async () => {
 
 async function save() {
   if (busy.value || loading.value || error.value) return
+  if (form.body.includes('data-type="image-upload"')) {
+    message.value = '이미지 업로드를 완료하거나 업로드 블록을 취소한 뒤 저장하세요.'
+    return
+  }
   busy.value = true
   message.value = ''
   try {
@@ -101,7 +116,7 @@ async function remove() {
                 content-type="html"
                 :extensions="extensions"
                 :editable="!busy && !loading && !error"
-                :image="false"
+                :handlers="customHandlers"
                 :mention="false"
                 placeholder="본문을 작성하세요…"
                 :editor-props="{ attributes: { 'aria-label': '본문' } }"

@@ -22,5 +22,12 @@
       "migrations_dir": "migrations",
       "remote": false
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "IMAGES",
+      "bucket_name": "simple-blog-images",
+      "remote": false
+    }
   ]
 }

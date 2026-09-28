@@ -11,9 +11,15 @@ importers:
       '@nuxt/ui':
         specifier: ^4.11.2
         version: 4.11.2(dbdb9d15dcfc066873f2baa7b40b200e)
+      '@tiptap/core':
+        specifier: ^3.31.3
+        version: 3.31.3(@tiptap/pm@3.31.3)
       '@tiptap/extension-text-align':
         specifier: ^3.31.3
         version: 3.31.3(@tiptap/core@3.31.3(@tiptap/pm@3.31.3))
+      '@tiptap/vue-3':
+        specifier: ^3.31.3
+        version: 3.31.3(@floating-ui/dom@1.8.0)(@tiptap/core@3.31.3(@tiptap/pm@3.31.3))(@tiptap/pm@3.31.3)(vue@3.5.43(typescript@5.9.3))
       jose:
         specifier: ^6.2.12
         version: 6.2.12

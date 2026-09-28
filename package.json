@@ -16,7 +16,9 @@
   },
   "dependencies": {
     "@nuxt/ui": "^4.11.2",
+    "@tiptap/core": "^3.31.3",
     "@tiptap/extension-text-align": "^3.31.3",
+    "@tiptap/vue-3": "^3.31.3",
     "jose": "^6.2.12",
     "markdown-it": "^15.0.2",
     "nuxt": "^4.5.2",

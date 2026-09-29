@@ -35,11 +35,11 @@ watch(file, async value => {
   <NodeViewWrapper :contenteditable="false" class="my-4 space-y-2">
     <UFileUpload
       v-model="file"
-      accept="image/jpeg,image/png,image/webp"
+      accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
       :disabled="loading || !editor.isEditable"
       :preview="false"
       :label="loading ? 'WebP 변환 및 업로드 중…' : '사진을 선택하거나 끌어 놓으세요'"
-      description="JPG, PNG, WebP · 최대 10MB · WebP로 변환하여 저장"
+      description="JPG, PNG, WebP, HEIC, HEIF 등 최대 10MB 용량의 이미지를 WebP로 변환하여 저장합니다."
       class="min-h-40"
     />
     <p v-if="error" role="alert" class="text-sm text-error">{{ error }}</p>

@@ -5,7 +5,7 @@ import { ImageUpload } from '~/extensions/image-upload'
 import Youtube from '@tiptap/extension-youtube'
 import TextAlign from '@tiptap/extension-text-align'
 
-const extensions = [Youtube.configure({ nocookie: true, addPasteHandler: true }), ImageUpload, TextAlign.configure({ types: ['heading', 'paragraph'] })]
+const extensions = [Youtube.configure({ nocookie: true, addPasteHandler: true }), ImageUpload, TextAlign.configure({ types: ['heading', 'paragraph', 'image'] })]
 
 const customHandlers = {
   imageUpload: {
@@ -20,21 +20,23 @@ const toolbarItems: EditorToolbarItem<typeof customHandlers>[][] = [
   [{ kind: 'undo', icon: 'i-lucide-undo-2' }, 
   { kind: 'redo', icon: 'i-lucide-redo-2' }],
 
-  [  { kind: 'heading', level: 1, icon: 'i-lucide-heading-1' },
-  { kind: 'heading', level: 2, icon: 'i-lucide-heading-2' },
-
-  { kind: 'textAlign', align: 'left', icon: 'i-lucide-align-left' },
-  { kind: 'textAlign', align: 'center', icon: 'i-lucide-align-center' },
-  { kind: 'textAlign', align: 'right', icon: 'i-lucide-align-right' },
+  [{ kind: 'heading', level: 1, icon: 'i-lucide-heading-1' },
+  { kind: 'heading', level: 2, icon: 'i-lucide-heading-2' },],
   
-  { kind: 'mark', mark: 'bold', icon: 'i-lucide-bold' }, 
-  { kind: 'mark', mark: 'italic', icon: 'i-lucide-italic' }, 
-  { kind: 'mark', mark: 'strike', icon: 'i-lucide-strikethrough' }],
-
   [{ kind: 'bulletList', icon: 'i-lucide-list' }, 
-  { kind: 'orderedList', icon: 'i-lucide-list-ordered' },
-  { kind: 'blockquote', icon: 'i-lucide-quote' },
-  { kind: 'codeBlock', icon: 'i-lucide-code' }],
+  { kind: 'orderedList', icon: 'i-lucide-list-ordered' },],
+
+  [{ kind: 'textAlign', align: 'left', icon: 'i-lucide-align-left' },
+  { kind: 'textAlign', align: 'center', icon: 'i-lucide-align-center' },
+  { kind: 'textAlign', align: 'right', icon: 'i-lucide-align-right' }],
+  
+  [{ kind: 'mark', mark: 'bold', icon: 'i-lucide-bold' },
+  { kind: 'mark', mark: 'italic', icon: 'i-lucide-italic' },
+  { kind: 'mark', mark: 'strike', icon: 'i-lucide-strikethrough' },],
+
+  [{ kind: 'blockquote', icon: 'i-lucide-quote' },
+  { kind: 'codeBlock', icon: 'i-lucide-code' },
+  { kind: 'link', icon: 'i-lucide-link' },],
 ]
 
 const route = useRoute()
@@ -99,10 +101,10 @@ async function remove() {
     <h1 class="text-3xl font-bold text-highlighted">{{ slug ? "포스트 수정" : "새 포스트 작성" }}</h1>
     <UAlert v-if="error" color="error" :title="error" />
     <p v-if="loading" role="status" class="text-muted">글을 불러오는 중…</p>
-    <UCard>
+    <div>
       <!-- <template #header><h2 class="text-lg font-semibold">{{ slug ? '글 수정' : '새 글' }}</h2></template> -->
       <form @submit.prevent="save">
-        <fieldset :disabled="busy || loading || !!error" class="space-y-5">
+        <fieldset :disabled="busy || loading || !!error" class="min-w-0 space-y-5">
           <UFormField label="제목" name="title" required>
             <UInput v-model="form.title" required :maxlength="200" class="w-full" />
           </UFormField>
@@ -121,10 +123,10 @@ async function remove() {
                 :mention="false"
                 placeholder="본문을 작성하세요…"
                 :editor-props="{ attributes: { 'aria-label': '본문' } }"
-                :ui="{ content: 'min-h-80 p-4' }"
-                class="w-full rounded-md border border-default"
+                :ui="{ content: 'min-h-80 min-w-0 p-4 [&_.tiptap]:[overflow-wrap:anywhere]' }"
+                class="w-full min-w-0 rounded-md border border-default"
               >
-                <UEditorToolbar :editor="editor" :items="toolbarItems" class="flex-wrap border-b border-default p-2" />
+                <UEditorToolbar :editor="editor" :items="toolbarItems" class="sticky top-0 z-10 flex-wrap border-b bg-default border-default p-2" />
               </UEditor>
               <template #fallback>
                 <p class="p-4 text-muted">에디터를 불러오는 중…</p>
@@ -138,7 +140,7 @@ async function remove() {
           </div>
         </fieldset>
       </form>
-    </UCard>
+    </div>
     <p role="status" class="text-sm text-muted">{{ message }}</p>
   </section>
 </template>

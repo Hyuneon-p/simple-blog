@@ -2,16 +2,21 @@
 const { data: posts, error } = await useFetch('/api/posts')
 const { data: categories, error: categoryError } = await useFetch('/api/categories')
 const selectedCategory = ref<number | null | undefined>(undefined)
-const categoryLabel = computed(() => selectedCategory.value === undefined ? '기록'
-  : selectedCategory.value === null ? '미분류'
-  : categories.value?.find(category => category.id === selectedCategory.value)?.name ?? '기록')
 const categoryItems = computed(() => [
-  { label: '전체 기록', onSelect: () => { selectedCategory.value = undefined } },
-  { label: '미분류', onSelect: () => { selectedCategory.value = null } },
+  { label: '기록들', value: undefined },
+  { label: '미분류', value: null },
   ...(categories.value ?? []).map(category => ({
-    label: category.name, onSelect: () => { selectedCategory.value = category.id },
+    label: category.name, value: category.id,
   })),
-])
+].map(item => ({
+  ...item,
+  onSelect: () => { selectedCategory.value = item.value },
+})))
+
+const categoryLabel = computed(() =>
+  (categoryItems.value.find(item => item.value === selectedCategory.value)
+    ?? categoryItems.value[0])?.label)
+    
 const filteredPosts = computed(() => (posts.value ?? []).filter(post =>
   selectedCategory.value === undefined || post.category_id === selectedCategory.value))
 </script>

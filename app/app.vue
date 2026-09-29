@@ -4,27 +4,12 @@
     titleTemplate: (title?: string) => title ? `${title} | ${appConfig.title}` : appConfig.title,
   }))
 
-  const menuOpen = ref(false)
   const menuItems = [
     { label: '새 글 작성', to: '/admin/editor', external: true },
     { label: '글 관리', to: '/admin/manage', external: true },
     { label: '카테고리 관리', to: '/admin/categories', external: true },
   ]
 
-  let closeTimer: ReturnType<typeof setTimeout> | undefined
-
-  function openMenu(event: PointerEvent) {
-    if (event.pointerType !== 'mouse') return
-    clearTimeout(closeTimer)
-    menuOpen.value = true
-  }
-
-  function closeMenu(event: PointerEvent) {
-    if (event.pointerType !== 'mouse') return
-    closeTimer = setTimeout(() => { menuOpen.value = false }, 150)
-  }
-
-  onBeforeUnmount(() => clearTimeout(closeTimer))
 </script>
 
 <template>
@@ -36,11 +21,23 @@
           <NuxtLink to="/" class="text-lg font-semibold text-highlighted">{{ appConfig.title }}</NuxtLink>
           <div class="flex items-center gap-2">
             <UColorModeButton aria-label="라이트/다크 모드 전환" title="라이트/다크 모드 전환" />
-            <div @pointerenter="openMenu" @pointerleave="closeMenu">
-              <UDropdownMenu v-model:open="menuOpen" :items="menuItems" :modal="false" :portal="false" :content="{ align: 'end', side: 'bottom' }">
-                <UButton color="neutral" variant="ghost">관리</UButton>
-              </UDropdownMenu>
-            </div>
+            <UPopover mode="hover" :open-delay="0" :close-delay="150" enable-touch :content="{ align: 'end', side: 'bottom' }">
+              <UButton color="neutral" variant="ghost">관리</UButton>
+              <template #content>
+                <div class="flex min-w-36 flex-col p-1">
+                  <UButton
+                    v-for="item in menuItems"
+                    :key="item.to"
+                    :to="item.to"
+                    :external="item.external"
+                    color="neutral"
+                    variant="ghost"
+                  >
+                    {{ item.label }}
+                  </UButton>
+                </div>
+              </template>
+            </UPopover>
           </div>
         </header>
         <main>

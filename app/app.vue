@@ -8,6 +8,7 @@
   const menuItems = [
     { label: '새 글 작성', to: '/admin/editor', external: true },
     { label: '글 관리', to: '/admin/manage', external: true },
+    { label: '카테고리 관리', to: '/admin/categories', external: true },
   ]
 
   let closeTimer: ReturnType<typeof setTimeout> | undefined

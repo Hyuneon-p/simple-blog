@@ -8,7 +8,14 @@ export async function readPost(event: H3Event) {
     || typeof input.body !== 'string' || input.body.length > 100000) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid title or body' })
   }
-  return { title: input.title.trim(), body: sanitizeBody(input.body) }
+  const category_id = input.category_id ?? null
+  if (category_id !== null) {
+    if (!Number.isSafeInteger(category_id) || category_id < 1
+      || !await useDb(event).prepare('SELECT id FROM categories WHERE id = ?').bind(category_id).first()) {
+      throw createError({ statusCode: 400, statusMessage: '유효한 카테고리를 선택하세요.' })
+    }
+  }
+  return { title: input.title.trim(), body: sanitizeBody(input.body), category_id }
 }
 
 // The INSERT's unique constraint, not a separate SELECT, resolves concurrent titles.

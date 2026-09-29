@@ -43,7 +43,16 @@ const route = useRoute()
 definePageMeta({ key: route => route.path })
 
 const slug = typeof route.params.slug === 'string' ? route.params.slug : ''
-const form = reactive({ title: '', body: '' })
+const form = reactive({ title: '', body: '', category_id: null as number | null })
+const { data: categories, error: categoryError } = await useFetch('/api/categories')
+const categoryItems = computed(() => [
+  { label: '미분류', value: 0 },
+  ...(categories.value ?? []).map(category => ({ label: category.name, value: category.id })),
+])
+const selectedCategory = computed({
+  get: () => form.category_id ?? 0,
+  set: (value: number) => { form.category_id = value === 0 ? null : value },
+})
 const selectedId = ref<number | null>(null)
 const loading = ref(!!slug)
 const busy = ref(false)
@@ -60,7 +69,7 @@ onMounted(async () => {
   try {
     const post = await $fetch(`/api/admin/posts/by-slug/${encodeURIComponent(slug)}`)
     selectedId.value = post.id
-    Object.assign(form, { title: post.title, body: post.body })
+    Object.assign(form, { title: post.title, body: post.body, category_id: post.category_id })
   } catch (cause: any) { error.value = cause.data?.statusMessage || '글을 불러오지 못했습니다.' }
   finally { loading.value = false }
 })
@@ -107,6 +116,16 @@ async function remove() {
         <fieldset :disabled="busy || loading || !!error" class="min-w-0 space-y-5">
           <UFormField label="제목" name="title" required>
             <UInput v-model="form.title" required :maxlength="200" class="w-full" />
+          </UFormField>
+          <UFormField label="카테고리" name="category">
+            <USelect
+              v-model="selectedCategory"
+              :items="categoryItems"
+              aria-label="카테고리"
+              class="w-full"
+              :disabled="busy || loading || !!error || !!categoryError"
+            />
+            <p v-if="categoryError" class="mt-1 text-sm text-error">카테고리를 불러오지 못했습니다. 새로고침해 주세요.</p>
           </UFormField>
           <UFormField label="본문" name="body">
             <ClientOnly>

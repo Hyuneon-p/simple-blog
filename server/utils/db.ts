@@ -5,6 +5,7 @@ export interface Post {
   id: number
   slug: string
   title: string
+  category_id: number | null
   body: string
   body_format: 'markdown' | 'html'
   status: 'draft' | 'published'

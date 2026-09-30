@@ -19,3 +19,15 @@ div[data-youtube-video] iframe {
   border: 0;
   border-radius: 0.5rem;
 }
+
+/* Enable color fading only while the theme toggle is changing the palette. */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-fading,
+  html.theme-fading *,
+  html.theme-fading *::before,
+  html.theme-fading *::after {
+    transition-property: background-color, color, border-color, fill, stroke !important;
+    transition-duration: 300ms !important;
+    transition-timing-function: ease-in-out !important;
+  }
+}

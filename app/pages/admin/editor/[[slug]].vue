@@ -43,7 +43,7 @@ const route = useRoute()
 definePageMeta({ key: route => route.path })
 
 const slug = typeof route.params.slug === 'string' ? route.params.slug : ''
-const form = reactive({ title: '', body: '', category_id: null as number | null })
+const form = reactive({ title: '', body: '', category_id: null as number | null, is_pinned: false })
 const { data: categories, error: categoryError } = await useFetch('/api/categories')
 const categoryItems = computed(() => [
   { label: '미분류', value: 0 },
@@ -69,7 +69,7 @@ onMounted(async () => {
   try {
     const post = await $fetch(`/api/admin/posts/by-slug/${encodeURIComponent(slug)}`)
     selectedId.value = post.id
-    Object.assign(form, { title: post.title, body: post.body, category_id: post.category_id })
+    Object.assign(form, { title: post.title, body: post.body, category_id: post.category_id, is_pinned: !!post.is_pinned })
   } catch (cause: any) { error.value = cause.data?.statusMessage || '글을 불러오지 못했습니다.' }
   finally { loading.value = false }
 })
@@ -127,6 +127,11 @@ async function remove() {
             />
             <p v-if="categoryError" class="mt-1 text-sm text-error">카테고리를 불러오지 못했습니다. 새로고침해 주세요.</p>
           </UFormField>
+          <USwitch
+            v-model="form.is_pinned"
+            label="고정하기"
+            :disabled="busy || loading || !!error"
+          />
           <UFormField label="본문" name="body">
             <ClientOnly>
               <UEditor

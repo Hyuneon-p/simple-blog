@@ -106,3 +106,6 @@ pnpm preview
 향후 배포할 때 실제 D1 ID, 도메인 및 Access 정책을 설정해야 합니다.
 Access 대상은 `/admin`, `/admin/*`, `/api/admin`, `/api/admin/*`이며,
 환경변수는 `NUXT_ACCESS_TEAM_DOMAIN`, `NUXT_ACCESS_AUDIENCE`입니다.
+
+글 작성·수정 화면의 “상단에 고정” 토글을 켜면 메인 기록 위에 제목만 작게 표시됩니다.
+고정 글은 카테고리 필터와 무관하게 최신순으로 표시되며 일반 목록에도 유지됩니다.

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { data: pinnedPosts, error: pinnedError, refresh: refreshPinned } = await useFetch('/api/pinned-posts')
 const { data: initialPage, error: initialError } = await useFetch('/api/posts')
 const posts = ref(initialPage.value?.posts ?? [])
 const nextCursor = ref(initialPage.value?.nextCursor ?? null)
@@ -11,8 +12,7 @@ let generation = 0
 const { data: categories, error: categoryError } = await useFetch('/api/categories')
 const selectedCategory = ref<number | null | undefined>(undefined)
 const categoryItems = computed(() => [
-  { label: '기록들', value: undefined },
-  { label: '미분류', value: null },
+  { label: '기록', value: undefined },
   ...(categories.value ?? []).map(category => ({
     label: category.name, value: category.id,
   })),
@@ -79,6 +79,22 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="space-y-6">
+    <nav v-if="pinnedPosts?.length" aria-label="고정 글" class="space-y-2 pb-5">
+      <NuxtLink
+        v-for="post in pinnedPosts"
+        :key="post.id"
+        :to="`/posts/${encodeURIComponent(post.slug)}`"
+        class="flex items-start gap-2 text-sm text-muted hover:text-primary"
+      >
+        <UIcon name="i-lucide-pin" class="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+        <span class="min-w-0 [overflow-wrap:anywhere]">{{ post.title }}</span>
+      </NuxtLink>
+    </nav>
+    <UAlert v-if="pinnedError" color="error" variant="soft" title="고정 글을 불러오지 못했습니다.">
+      <template #actions>
+        <UButton color="neutral" variant="outline" @click="refreshPinned()">다시 시도</UButton>
+      </template>
+    </UAlert>
     <h1 class="text-3xl font-bold text-highlighted">
       <UDropdownMenu :items="categoryItems">
         <button type="button" aria-label="카테고리별 글 보기" class="inline-flex max-w-full items-center gap-2 text-left">

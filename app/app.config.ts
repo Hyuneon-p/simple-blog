@@ -1,5 +1,6 @@
 export default defineAppConfig({
-  title: '기록하다',
+  title: '프로 삽질러',
+  header: '기록하는 곳',
   ui: {
     colors: {
       primary: 'green',

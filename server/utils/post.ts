@@ -8,6 +8,10 @@ export async function readPost(event: H3Event) {
     || typeof input.body !== 'string' || input.body.length > 100000) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid title or body' })
   }
+  const is_pinned = input.is_pinned ?? false
+  if (typeof is_pinned !== 'boolean') {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid pinned flag' })
+  }
   const category_id = input.category_id ?? null
   if (category_id !== null) {
     if (!Number.isSafeInteger(category_id) || category_id < 1
@@ -15,7 +19,7 @@ export async function readPost(event: H3Event) {
       throw createError({ statusCode: 400, statusMessage: '유효한 카테고리를 선택하세요.' })
     }
   }
-  return { title: input.title.trim(), body: sanitizeBody(input.body), category_id }
+  return { title: input.title.trim(), body: sanitizeBody(input.body), category_id, is_pinned }
 }
 
 // The INSERT's unique constraint, not a separate SELECT, resolves concurrent titles.

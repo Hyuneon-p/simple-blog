@@ -14,7 +14,7 @@
 
 <template>
   <UApp>
-    <NuxtLoadingIndicator color="#2563eb" />
+    <NuxtLoadingIndicator color="green" />
     <div class="flex min-h-screen flex-col">
       <UContainer class="max-w-3xl flex-1 py-6">
         <header class="mb-9 flex items-center justify-between border-b border-default pb-6">
